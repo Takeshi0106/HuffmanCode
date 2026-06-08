@@ -23,20 +23,31 @@ struct Compare {
 
 // 文字列と頻度マップからハフマン木を構築--------------------------------------------------------------------
 HuffmanNode* buildHuffmanTree(const string& text, unordered_map<char, int>& freqMap) {
+	
+	// 優先度付きキューを作成
 	priority_queue<HuffmanNode*, vector<HuffmanNode*>, Compare> pq;
 
 	// 頻度マップをもとに、各文字のノードを作成して優先度付きキューに追加
-
+	for (const auto& pair : freqMap) {
+		pq.push(new HuffmanNode(pair.first, pair.second));
+	}
 
 	// 木が一つになるまで、頻度の小さい2つのノードを取り出して統合
 	while (pq.size() > 1) {
 
 
 		// 新しい親ノードを作成し、左右の子ノードを設定
+		HuffmanNode* left = pq.top(); 
+		pq.pop();
+		HuffmanNode* right = pq.top(); 
+		pq.pop();
 
+		HuffmanNode* parent = new HuffmanNode('\0', left->freq + right->freq);
+		parent->left = left;
+		parent->right = right;
 
 		// 親ノードを再びキューに追加
-
+		pq.push(parent);
 	}
 
 	// 最後に残ったノードが木の根となる
